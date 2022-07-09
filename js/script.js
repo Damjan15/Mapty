@@ -29,8 +29,6 @@ if (navigator.geolocation) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
 
-      console.log(latitude, longitude);
-
       // Leaflet
       const coords = [latitude, longitude]
 
@@ -41,10 +39,25 @@ if (navigator.geolocation) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker(coords)
+
+    // Put a marker on a location we click
+    map.on('click', (mapEvent) => {
+        const { lat, lng } = mapEvent.latlng
+
+        L.marker([lat, lng])
         .addTo(map)
-        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
+        .bindPopup(L.popup({
+            maxWidth: 150,
+            minWidth: 100,
+            autoClose: false,
+            closeOnClick: false,
+            className: "running-popup"
+        }))
+        .setPopupContent('Workout')
         .openPopup();
+    })
+    
+
     },
     () => {
       alert("Error getting position! Please try again.")
